@@ -81,6 +81,7 @@ def train_models(_df):
     # Encode categoricals
     le_dict = {}
     cat_cols = df.select_dtypes(include="object").columns.drop(["customerID", "Churn"])
+
     for col in cat_cols:
         le = LabelEncoder()
         df[col] = le.fit_transform(df[col])
@@ -88,17 +89,42 @@ def train_models(_df):
 
     X = df.drop(columns=["customerID", "Churn", "Churn_Binary"])
     y = df["Churn_Binary"]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y,
+    )
 
     scaler = StandardScaler()
+
     X_train_s = scaler.fit_transform(X_train)
     X_test_s = scaler.transform(X_test)
 
     models = {
-        "Logistic Regression": LogisticRegression(max_iter=1000, random_state=42),
-        "Random Forest": RandomForestClassifier(n_estimators=200, random_state=42),
-        "Gradient Boosting": GradientBoostingClassifier(n_estimators=200, random_state=42),
-        "XGBoost": XGBClassifier(n_estimators=200, eval_metric="logloss", random_state=42, verbosity=0),
+        "Logistic Regression": LogisticRegression(
+            max_iter=1000,
+            random_state=42
+        ),
+
+        "Random Forest": RandomForestClassifier(
+            n_estimators=200,
+            random_state=42
+        ),
+
+        "Gradient Boosting": GradientBoostingClassifier(
+            n_estimators=200,
+            random_state=42
+        ),
+
+        "XGBoost": XGBClassifier(
+            n_estimators=200,
+            eval_metric="logloss",
+            random_state=42,
+            verbosity=0
+        ),
     }
 
     results = {}
@@ -106,9 +132,22 @@ def train_models(_df):
     feature_importances = {}
 
     for name, model in models.items():
-        model.fit(X_train_s, y_train)
-        y_pred = model.predict(X_test_s)
-        y_prob = model.predict_proba(X_test_s)[:, 1]
+
+        # Logistic Regression → scaled data
+        if name == "Logistic Regression":
+
+            model.fit(X_train_s, y_train)
+
+            y_pred = model.predict(X_test_s)
+            y_prob = model.predict_proba(X_test_s)[:, 1]
+
+        # Tree-based models → original data
+        else:
+
+            model.fit(X_train, y_train)
+
+            y_pred = model.predict(X_test)
+            y_prob = model.predict_proba(X_test)[:, 1]
 
         results[name] = {
             "Accuracy": accuracy_score(y_test, y_pred),
@@ -122,18 +161,32 @@ def train_models(_df):
         roc_data[name] = (fpr, tpr)
 
         if hasattr(model, "feature_importances_"):
-            feature_importances[name] = dict(zip(X.columns, model.feature_importances_))
+            feature_importances[name] = dict(
+                zip(X.columns, model.feature_importances_)
+            )
 
-    # Determine best model
+    # Best model
     best_model_name = max(results, key=lambda k: results[k]["ROC-AUC"])
     best_model = models[best_model_name]
     best_auc = results[best_model_name]["ROC-AUC"]
 
-    # Score entire dataset for risk segmentation
-    X_all_scaled = scaler.transform(X)
-    all_probs = best_model.predict_proba(X_all_scaled)[:, 1]
+    # Entire dataset predictions
+    if best_model_name == "Logistic Regression":
+        X_all_input = scaler.transform(X)
+    else:
+        X_all_input = X
 
-    return results, roc_data, feature_importances, all_probs, X.columns.tolist(), best_model_name, best_auc
+    all_probs = best_model.predict_proba(X_all_input)[:, 1]
+
+    return (
+        results,
+        roc_data,
+        feature_importances,
+        all_probs,
+        X.columns.tolist(),
+        best_model_name,
+        best_auc,
+    )
 
 
 # ──────────────────────────────────────────────────────────────
@@ -356,6 +409,17 @@ st.markdown(
 results_df = pd.DataFrame(results).T.sort_values(by="ROC-AUC", ascending=False)
 st.dataframe(results_df.style.format("{:.4f}").highlight_max(axis=0, color="#312e81"), use_container_width=True)
 
+st.markdown(
+    f"""
+    <div class="insight-box">
+    <i class="fa-solid fa-lightbulb" style="color:#facc15;"></i>
+    <b>Model Insight:</b> {best_model_name} achieved the best ROC-AUC score, 
+    showing stronger ability to distinguish churn and non-churn customers.
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
 # ROC curves
 fig_roc = go.Figure()
 colors_roc = ["#6366f1", "#8b5cf6", "#a855f7", "#f59e0b"]
@@ -384,9 +448,13 @@ st.plotly_chart(styled_fig(fig_roc), use_container_width=True)
 #  4.  FEATURE  IMPORTANCE
 # ══════════════════════════════════════════════════════════════
 st.markdown(
-    '<p class="section-header">'
-    '<i class="fa-solid fa-thumbtack" style="color:#ef4444;"></i> Feature Importance (Top 10)'
-    "</p>",
+    '<div class="insight-box">'
+    '<i class="fa-solid fa-lightbulb" style="color:#facc15;"></i> '
+    "<b>Key Insight:</b><br>"
+    "• Tenure is the strongest churn predictor.<br>"
+    "• Month-to-month customers show higher churn.<br>"
+    "• Fiber optic users also show elevated churn risk."
+    "</div>",
     unsafe_allow_html=True,
 )
 
