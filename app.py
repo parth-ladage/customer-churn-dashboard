@@ -18,7 +18,7 @@ from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, roc_auc_score, roc_curve
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 
 warnings.filterwarnings("ignore")
@@ -78,16 +78,14 @@ def load_raw_data():
 def train_models(_df):
     df = _df.copy()
 
-    # Encode categoricals
-    le_dict = {}
-    cat_cols = df.select_dtypes(include="object").columns.drop(["customerID", "Churn"])
+    # One-hot encoding for categorical variables
+    df = pd.get_dummies(
+        df,
+        columns=df.select_dtypes(include="object").columns.drop(["customerID", "Churn"]),
+        drop_first=True
+    )
 
-    for col in cat_cols:
-        le = LabelEncoder()
-        df[col] = le.fit_transform(df[col])
-        le_dict[col] = le
-
-    X = df.drop(columns=["customerID", "Churn", "Churn_Binary"])
+    X = df.drop(columns=["customerID", "Churn_Binary"])
     y = df["Churn_Binary"]
 
     X_train, X_test, y_train, y_test = train_test_split(
