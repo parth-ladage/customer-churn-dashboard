@@ -81,11 +81,11 @@ def train_models(_df):
     # One-hot encoding for categorical variables
     df = pd.get_dummies(
         df,
-        columns=df.select_dtypes(include="object").columns.drop(["customerID", "Churn"]),
+        columns=df.select_dtypes(include="object").columns.drop(["customerID"]),
         drop_first=True
     )
 
-    X = df.drop(columns=["customerID", "Churn_Binary"])
+    X = df.drop(columns=["customerID", "Churn_Binary", "Churn_Yes"])
     y = df["Churn_Binary"]
 
     X_train, X_test, y_train, y_test = train_test_split(
@@ -446,13 +446,9 @@ st.plotly_chart(styled_fig(fig_roc), use_container_width=True)
 #  4.  FEATURE  IMPORTANCE
 # ══════════════════════════════════════════════════════════════
 st.markdown(
-    '<div class="insight-box">'
-    '<i class="fa-solid fa-lightbulb" style="color:#facc15;"></i> '
-    "<b>Key Insight:</b><br>"
-    "• Tenure is the strongest churn predictor.<br>"
-    "• Month-to-month customers show higher churn.<br>"
-    "• Fiber optic users also show elevated churn risk."
-    "</div>",
+    '<p class="section-header">'
+    '<i class="fa-solid fa-thumbtack" style="color:#ef4444;"></i> Feature Importance (Top 10)'
+    "</p>",
     unsafe_allow_html=True,
 )
 
