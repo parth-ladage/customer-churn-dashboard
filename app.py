@@ -63,7 +63,7 @@ def styled_fig(fig):
 # ──────────────────────────────────────────────────────────────
 @st.cache_data
 def load_raw_data():
-    csv_path = os.path.join(os.path.dirname(__file__), "..", "WA_Fn-UseC_-Telco-Customer-Churn.csv")
+    csv_path = os.path.join(os.path.dirname(__file__), "WA_Fn-UseC_-Telco-Customer-Churn.csv")
     df = pd.read_csv(csv_path)
     df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
     df.dropna(subset=["TotalCharges"], inplace=True)
