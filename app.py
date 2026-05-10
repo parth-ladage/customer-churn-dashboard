@@ -525,9 +525,9 @@ for i, (title, desc) in enumerate(recommendations):
 st.markdown(
     '<div class="footer-text">'
     "Built with <b>Streamlit</b> &middot; Plotly &middot; Scikit-learn &middot; XGBoost &middot; Pandas<br>"
-    'Author: <b>Parth Ladage</b> &middot; <a href="https://github.com/ParthLadworker" target="_blank">GitHub</a>'
+    'Author: <b>Parth Ladage</b> &middot; <a href="https://github.com/parth-ladage" target="_blank">GitHub</a>'
     " &middot; "
-    '<a href="https://linkedin.com/in/parth-ladage" target="_blank">LinkedIn</a>'
+    '<a href="https://www.linkedin.com/in/parth-ladage-0a76a4387/" target="_blank">LinkedIn</a>'
     "</div>",
     unsafe_allow_html=True,
 )
