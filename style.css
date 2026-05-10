@@ -1,0 +1,220 @@
+/* ================================================================
+   Customer Churn Dashboard — Dark Theme
+   ================================================================ */
+
+/* ===== Fonts & Icons ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+
+/* ===== Sidebar Toggle Fix ===== */
+/* The raw text "keyboard_double_arrow_left/right" lives in a nested span > span */
+
+/* --- Collapse button (sidebar open) --- */
+[data-testid="stSidebarCollapseButton"] span span {
+    font-size: 0 !important;
+    visibility: hidden;
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+[data-testid="stSidebarCollapseButton"] span span::before {
+    content: "\276E";
+    font-size: 20px;
+    color: #a5b4fc;
+    visibility: visible;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* --- Expand button (sidebar collapsed) --- */
+[data-testid="stSidebarExpandButton"] span span {
+    font-size: 0 !important;
+    visibility: hidden;
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+[data-testid="stSidebarExpandButton"] span span::before {
+    content: "\276F";
+    font-size: 20px;
+    color: #a5b4fc;
+    visibility: visible;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* ===== Base Typography ===== */
+html, body, [class*="st-"] {
+    font-family: 'Inter', sans-serif;
+}
+
+/* ===== Force Dark Background ===== */
+.stApp {
+    background-color: #0a0914 !important;
+    color: #e2e8f0 !important;
+}
+
+/* ===== All text forced light for readability ===== */
+.stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6,
+.stApp p, .stApp span, .stApp label, .stApp div, .stApp li {
+    color: #e2e8f0 !important;
+}
+
+/* ===== Dashboard Title ===== */
+.dashboard-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #a5b4fc !important;
+    margin-bottom: 0;
+    letter-spacing: -0.5px;
+}
+
+.dashboard-subtitle {
+    font-size: 1rem;
+    color: #94a3b8 !important;
+    margin-top: 0.2rem;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+}
+
+/* ===== Section Headers ===== */
+.section-header {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #e2e8f0 !important;
+    border-left: 4px solid #6366f1;
+    padding-left: 0.8rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* ===== KPI Cards ===== */
+.kpi-card {
+    background: linear-gradient(135deg, #1e1b4b, #312e81);
+    border: 1px solid #4338ca;
+    border-radius: 14px;
+    padding: 1.2rem 1.5rem;
+    text-align: left;
+}
+.kpi-card .kpi-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #a5b4fc !important;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.3rem;
+}
+.kpi-card .kpi-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #e2e8f0 !important;
+}
+
+/* ===== Insight Boxes ===== */
+.insight-box {
+    background: rgba(99, 102, 241, 0.15);
+    border-left: 4px solid #6366f1;
+    padding: 0.9rem 1.2rem;
+    border-radius: 0 8px 8px 0;
+    margin: 0.8rem 0 1.2rem;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #e2e8f0 !important;
+}
+.insight-box b {
+    color: #c7d2fe !important;
+}
+
+/* ===== Recommendation Cards ===== */
+.rec-card {
+    background: linear-gradient(135deg, #1e1b4b, #312e81);
+    border: 1px solid #4338ca;
+    border-radius: 14px;
+    padding: 1.5rem;
+    height: 100%;
+}
+.rec-card h3 {
+    color: #e2e8f0 !important;
+    margin-bottom: 0.6rem;
+    font-size: 1.1rem;
+}
+.rec-card p {
+    color: #cbd5e1 !important;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* ===== Risk Cards ===== */
+.risk-card-high, .risk-card-medium, .risk-card-low {
+    border-radius: 14px;
+    padding: 1.2rem;
+    text-align: center;
+    color: white !important;
+}
+.risk-card-high   { background: linear-gradient(135deg, #7f1d1d, #991b1b); border: 1px solid #dc2626; }
+.risk-card-medium { background: linear-gradient(135deg, #78350f, #92400e); border: 1px solid #f59e0b; }
+.risk-card-low    { background: linear-gradient(135deg, #14532d, #166534); border: 1px solid #22c55e; }
+
+.risk-card-high h3, .risk-card-medium h3, .risk-card-low h3,
+.risk-card-high p, .risk-card-medium p, .risk-card-low p {
+    color: white !important;
+}
+
+/* ===== Footer ===== */
+.footer-text {
+    text-align: center;
+    color: #64748b !important;
+    font-size: 0.8rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #1e1b4b;
+}
+.footer-text a {
+    color: #818cf8 !important;
+    text-decoration: none;
+}
+
+/* ===== Sidebar ===== */
+section[data-testid="stSidebar"] {
+    background-color: #0f0d1a !important;
+}
+section[data-testid="stSidebar"] h2 {
+    color: #a5b4fc !important;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] .stMarkdown p {
+    color: #cbd5e1 !important;
+}
+
+/* ===== Best Model Badge ===== */
+.best-model-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white !important;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+/* ===== Plotly chart containers ===== */
+.stPlotlyChart {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* ===== Widget label colors ===== */
+div[data-testid="stMultiSelect"] label,
+div[data-testid="stSlider"] label {
+    color: #cbd5e1 !important;
+}
